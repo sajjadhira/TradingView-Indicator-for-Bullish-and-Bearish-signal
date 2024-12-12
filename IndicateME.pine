@@ -1,0 +1,32 @@
+//@version=5
+indicator("IndicateMe", overlay=true)
+
+// Define parameters
+lookback = input(50, title="Lookback Period")
+sma_length = input(50, title="SMA Length")
+
+// Calculate the 50-period simple moving average (SMA)
+sma50 = ta.sma(close, sma_length)
+
+// Identify chart patterns for buy and sell signals
+
+// Bullish Patterns
+is_bullish_engulfing = (close[1] < open[1]) and (close > open) and (close > open[1]) and (open < close[1])
+is_hammer = (close > open) and ((high - low) > 3 * (open - close)) and ((close - low) / (.001 + high - low) > 0.6)
+is_morning_star = (close[2] < open[2]) and (math.abs(close[1] - open[1]) < (high[1] - low[1]) * 0.3) and (close > open) and (close > ((open[2] + close[2]) / 2))
+
+// Bearish Patterns
+is_bearish_engulfing = (close[1] > open[1]) and (close < open) and (close < open[1]) and (open > close[1])
+is_shooting_star = (close < open) and ((high - low) > 3 * (open - close)) and ((high - close) / (.001 + high - low) > 0.6)
+is_evening_star = (close[2] > open[2]) and (math.abs(close[1] - open[1]) < (high[1] - low[1]) * 0.3) and (close < open) and (close < ((open[2] + close[2]) / 2))
+
+// Combine all conditions into a single buy and sell condition
+buy_condition = (is_bullish_engulfing or is_hammer or is_morning_star)
+sell_condition = (is_bearish_engulfing or is_shooting_star or is_evening_star)
+
+// Plot Buy Signal (BULLISH) and Sell Signal (BEARISH)
+plotshape(buy_condition, style=shape.labelup, location=location.belowbar, color=color.green, text="B", size=size.small, textcolor=color.white, offset=-1)
+plotshape(sell_condition, style=shape.labeldown, location=location.abovebar, color=color.red, text="S", size=size.small, textcolor=color.white, offset=-1)
+
+// Plot the 50-period SMA
+plot(sma50, color=color.blue, title="50 SMA", linewidth=2)
