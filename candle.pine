@@ -420,3 +420,15 @@ alertcondition(close > resistance_lower and close < resistance_upper, title="Nea
 alertcondition(close > support_lower and close < support_upper, title="Near Support Zone", message="Price is near the support zone!")
 
 
+// Input for EMA periods
+ema14_period = input.int(14, title="EMA 14 Period")
+ema28_period = input.int(28, title="EMA 28 Period")
+
+// Calculate EMAs
+ema14 = ta.ema(close, ema14_period)
+ema28 = ta.ema(close, ema28_period)
+
+// Plot EMAs
+plot(ema14, color=color.green, title="EMA 14", linewidth=2)
+plot(ema28, color=color.red, title="EMA 28", linewidth=2)
+
