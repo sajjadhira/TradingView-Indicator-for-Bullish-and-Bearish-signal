@@ -4,6 +4,11 @@ indicator("IndicateMe", overlay=true)
 // Define parameters
 lookback = input(50, title="Lookback Period")
 sma_length = input(50, title="SMA Length")
+// Input parameters
+lengthEMA = input.int(50, title="EMA Length", minval=1)
+rsiLength = input.int(14, title="RSI Length", minval=1)
+rsiOverbought = input.int(70, title="RSI Overbought Level", minval=1)
+rsiOversold = input.int(30, title="RSI Oversold Level", minval=1)
 
 // Calculate the 50-period simple moving average (SMA)
 sma50 = ta.sma(close, sma_length)
@@ -21,7 +26,7 @@ is_shooting_star = (close < open) and ((high - low) > 3 * (open - close)) and ((
 is_evening_star = (close[2] > open[2]) and (math.abs(close[1] - open[1]) < (high[1] - low[1]) * 0.3) and (close < open) and (close < ((open[2] + close[2]) / 2))
 
 // Combine all conditions into a single buy and sell condition
-buy_condition = (is_bullish_engulfing or is_hammer or is_morning_star)
+buy_condition = is_bullish_engulfing
 sell_condition = (is_bearish_engulfing or is_shooting_star or is_evening_star)
 
 // Plot Buy Signal (BULLISH) and Sell Signal (BEARISH)
@@ -29,4 +34,54 @@ plotshape(buy_condition, style=shape.labelup, location=location.belowbar, color=
 plotshape(sell_condition, style=shape.labeldown, location=location.abovebar, color=color.red, text="S", size=size.small, textcolor=color.white, offset=-1)
 
 // Plot the 50-period SMA
-plot(sma50, color=color.blue, title="50 SMA", linewidth=2)
+plot(sma50, color=color.red, title="50 SMA", linewidth=1)
+
+
+
+
+// Calculate EMA for trend detection
+ema = ta.ema(close, lengthEMA)
+
+// Calculate RSI
+rsi = ta.rsi(close, rsiLength)
+
+// Determine trend
+isUptrend = close > ema
+isDowntrend = close < ema
+
+// Plot EMA
+plot(ema, color=color.green, linewidth=1, title="EMA")
+
+// Add background color based on trend
+bgcolor(isUptrend ? color.new(color.green, 90) : na, title="Uptrend Highlight")
+bgcolor(isDowntrend ? color.new(color.red, 90) : na, title="Downtrend Highlight")
+
+// Plot RSI on a separate pane
+hline(rsiOverbought, "Overbought Level", color=color.red)
+hline(rsiOversold, "Oversold Level", color=color.green)
+plot(rsi, color=color.orange, title="RSI")
+
+// Highlight RSI conditions
+rsiOverboughtCondition = rsi > rsiOverbought
+rsiOversoldCondition = rsi < rsiOversold
+
+bgcolor(rsiOverboughtCondition ? color.new(color.red, 85) : na, title="RSI Overbought Highlight")
+bgcolor(rsiOversoldCondition ? color.new(color.green, 85) : na, title="RSI Oversold Highlight")
+
+// Define Doji criteria
+dojiSizePercent = input.float(0.1, "Doji Body Size %") // Percentage of total range
+bodySize = close - open
+doji = (bodySize >= 0 ? bodySize : -bodySize) <= ((high - low) * dojiSizePercent)
+
+// Identify Buy Doji (appearing in a downtrend)
+buyDoji = doji and (close[1] < open[1]) // Previous candle closed lower (downtrend)
+
+// Identify Sell Doji (appearing in an uptrend)
+sellDoji = doji and (close[1] > open[1]) // Previous candle closed higher (uptrend)
+
+// Plot shapes for Buy and Sell Doji
+plotshape(buyDoji, style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, title="Buy Doji")
+plotshape(sellDoji, style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, title="Sell Doji")
+
+// Highlight Doji bars
+bgcolor(doji ? color.new(color.yellow, 90) : na, title="Highlight Doji")

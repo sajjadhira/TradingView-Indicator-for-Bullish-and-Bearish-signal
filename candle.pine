@@ -1,0 +1,364 @@
+//@version=6
+indicator("Candle Detection", overlay=true)
+
+// Define Hammer Candle Conditions
+body = math.abs(close - open)              // Candle body size
+upperWick = high - math.max(open, close)   // Upper wick size
+lowerWick = math.min(open, close) - low    // Lower wick size
+candleRange = high - low                   // Total candle range
+
+// Hammer conditions
+isHammer = (lowerWick > (2 * body)) and (upperWick <= body) and (body > 0) and (candleRange > 0)
+
+// Trend Determination (Using Moving Average)
+smaTrend = ta.sma(close, 50)
+isUptrend = close > smaTrend
+isDowntrend = close < smaTrend
+
+// Determine Hammer Context
+isTopHammer = isHammer and isUptrend
+isBottomHammer = isHammer and isDowntrend
+
+// Plot Hammer Signals
+plotshape(isTopHammer, title="Top Hammer", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Bear Hammer")
+plotshape(isBottomHammer, title="Bottom Hammer", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text = "Bull Hammer")
+
+// Highlight Candle Background
+bgcolor(isTopHammer ? color.new(color.red, 85) : na)
+bgcolor(isBottomHammer ? color.new(color.green, 85) : na)
+
+// Alert Conditions
+alertcondition(isTopHammer, title="Top Hammer Detected", message="Top Hammer Candle Detected!")
+alertcondition(isBottomHammer, title="Bottom Hammer Detected", message="Bottom Hammer Candle Detected!")
+
+
+// --- Candle Details ---
+bullBody = close > open
+bearBody = close < open
+
+prevBullBody = close[1] > open[1]
+prevBearBody = close[1] < open[1]
+
+// --- Bullish Engulfing Condition ---
+bullishEngulfing = prevBearBody and bullBody and (close > open[1]) and (open < close[1])
+
+// --- Bearish Engulfing Condition ---
+bearishEngulfing = prevBullBody and bearBody and (open > close[1]) and (close < open[1])
+
+// --- Plot Bullish Engulfing ---
+plotshape(bullishEngulfing, title="Bullish Engulfing", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="Bull Engulf")
+
+// --- Plot Bearish Engulfing ---
+plotshape(bearishEngulfing, title="Bearish Engulfing", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Bear Engulf")
+
+// --- Background Highlights (Optional) ---
+bgcolor(bullishEngulfing ? color.new(color.green, 85) : na)
+bgcolor(bearishEngulfing ? color.new(color.red, 85) : na)
+
+// --- Alerts ---
+alertcondition(bullishEngulfing, title="Bullish Engulfing Alert", message="Bullish Engulfing Pattern Detected!")
+alertcondition(bearishEngulfing, title="Bearish Engulfing Alert", message="Bearish Engulfing Pattern Detected!")
+
+// --- Candle Details ---
+candle1_bearish = close[2] < open[2] and (open[2] - close[2]) > (high[2] - low[2]) * 0.5  // First candle: Strong bearish
+candle2_small = (high[1] - low[1]) > 0 and math.abs(close[1] - open[1]) < (high[1] - low[1]) * 0.3  // Second candle: Small body
+candle3_bullish = close > open and close > (open[2] + close[2]) / 2  // Third candle: Strong bullish, closes well into Candle 1 body
+
+// --- Trend Check (Downtrend before Morning Star) ---
+downtrend = close[3] < close[4] and close[2] < close[3]
+
+// --- Morning Star Condition ---
+isMorningStar = downtrend and candle1_bearish and candle2_small and candle3_bullish and open[1] < close[2] and close > open[2]
+
+// --- Plot Morning Star ---
+plotshape(isMorningStar, title="Morning Star", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="Morning Star")
+
+// --- Background Highlight (Optional) ---
+bgcolor(isMorningStar ? color.new(color.green, 85) : na)
+
+// --- Alert Condition ---
+alertcondition(isMorningStar, title="Morning Star Detected", message="Morning Star Pattern Detected!")
+
+
+
+// --- Candle Details ---
+candle1_bullish = close[2] > open[2] and (close[2] - open[2]) > (high[2] - low[2]) * 0.5  // First candle: Strong bullish
+candle2_small_evening = (high[1] - low[1]) > 0 and math.abs(close[1] - open[1]) < (high[1] - low[1]) * 0.3  // Second candle: Small body
+candle3_bearish = close < open and close < (open[2] + close[2]) / 2  // Third candle: Strong bearish, closes well into Candle 1 body
+
+// --- Trend Check (Uptrend before Evening Star) ---
+uptrend = close[3] > close[4] and close[2] > close[3]
+
+// --- Evening Star Condition ---
+isEveningStar = uptrend and candle1_bullish and candle2_small_evening and candle3_bearish and open[1] > close[2] and close < open[2]
+
+// --- Plot Evening Star ---
+plotshape(isEveningStar, title="Evening Star", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Evening Star")
+
+// --- Background Highlight (Optional) ---
+bgcolor(isEveningStar ? color.new(color.red, 85) : na)
+
+// --- Alert Condition ---
+alertcondition(isEveningStar, title="Evening Star Detected", message="Evening Star Pattern Detected!")
+
+
+
+// --- Candle Details ---
+bullish1 = close[2] > open[2]  // First candle is bullish
+bullish2 = close[1] > open[1]  // Second candle is bullish
+bullish3 = close > open       // Third candle is bullish
+
+strongBody1 = (close[2] - open[2]) > (high[2] - low[2]) * 0.5
+strongBody2 = (close[1] - open[1]) > (high[1] - low[1]) * 0.5
+strongBody3 = (close - open) > (high - low) * 0.5
+
+smallUpperWick1 = (high[2] - close[2]) < (close[2] - open[2]) * 0.3
+smallUpperWick2 = (high[1] - close[1]) < (close[1] - open[1]) * 0.3
+smallUpperWick3 = (high - close) < (close - open) * 0.3
+
+higherClose1 = close[1] > close[2]
+higherClose2 = close > close[1]
+
+higherOpen2 = open[1] >= close[2] and open[1] <= open[2]
+higherOpen3 = open >= close[1] and open <= open[1]
+
+// --- Trend Check (Downtrend before pattern) ---
+downtrend_tws = close[3] < close[4] and close[2] < close[3]
+
+// --- Three White Soldiers Condition ---
+isThreeWhiteSoldiers = downtrend_tws and bullish1 and bullish2 and bullish3 and strongBody1 and strongBody2 and strongBody3 and smallUpperWick1 and smallUpperWick2 and smallUpperWick3 and higherClose1 and higherClose2 and higherOpen2 and higherOpen3
+
+// --- Plot Signal ---
+plotshape(isThreeWhiteSoldiers, title="Three White Soldiers", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="3 Soldiers")
+
+// --- Highlight Background (Optional) ---
+bgcolor(isThreeWhiteSoldiers ? color.new(color.green, 85) : na)
+
+// --- Alert Condition ---
+alertcondition(isThreeWhiteSoldiers, title="Three White Soldiers Detected", message="Three White Soldiers Pattern Detected!")
+
+
+// --- Candle Details ---
+tbc_bearish1 = close[2] < open[2]  // First candle is bearish
+tbc_bearish2 = close[1] < open[1]  // Second candle is bearish
+tbc_bearish3 = close < open        // Third candle is bearish
+
+tbc_strongBody1 = (open[2] - close[2]) > (high[2] - low[2]) * 0.5
+tbc_strongBody2 = (open[1] - close[1]) > (high[1] - low[1]) * 0.5
+tbc_strongBody3 = (open - close) > (high - low) * 0.5
+
+tbc_smallLowerWick1 = (close[2] - low[2]) < (open[2] - close[2]) * 0.3
+tbc_smallLowerWick2 = (close[1] - low[1]) < (open[1] - close[1]) * 0.3
+tbc_smallLowerWick3 = (close - low) < (open - close) * 0.3
+
+tbc_lowerClose1 = close[1] < close[2]
+tbc_lowerClose2 = close < close[1]
+
+tbc_lowerOpen2 = open[1] <= close[2] and open[1] >= open[2]
+tbc_lowerOpen3 = open <= close[1] and open >= open[1]
+
+// --- Trend Check (Uptrend before pattern) ---
+tbc_uptrend = close[3] > close[4] and close[2] > close[3]
+
+// --- Three Black Crows Condition ---
+isThreeBlackCrows = tbc_uptrend and tbc_bearish1 and tbc_bearish2 and tbc_bearish3 and tbc_strongBody1 and tbc_strongBody2 and tbc_strongBody3 and tbc_smallLowerWick1 and tbc_smallLowerWick2 and tbc_smallLowerWick3 and tbc_lowerClose1 and tbc_lowerClose2 and tbc_lowerOpen2 and tbc_lowerOpen3
+
+// --- Plot Signal ---
+plotshape(isThreeBlackCrows, title="Three Black Crows", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="3 Crows")
+
+// --- Highlight Background (Optional) ---
+bgcolor(isThreeBlackCrows ? color.new(color.red, 85) : na)
+
+// --- Alert Condition ---
+alertcondition(isThreeBlackCrows, title="Three Black Crows Detected", message="Three Black Crows Pattern Detected!")
+
+
+// --- Candle Details ---
+dcc_bullishCandle1 = close[1] > open[1]  // First candle is bullish
+dcc_bearishCandle2 = close < open        // Second candle is bearish
+
+dcc_strongBody1 = (close[1] - open[1]) > (high[1] - low[1]) * 0.5
+dcc_strongBody2 = (open - close) > (high - low) * 0.5
+
+dcc_openAboveHigh1 = open > high[1]  // Second candle opens above first candle's high
+dcc_closeBelowMidpoint1 = close < (open[1] + close[1]) / 2  // Second candle closes below midpoint of first candle's body
+
+// --- Trend Check (Uptrend before pattern) ---
+dcc_uptrend = close[2] > close[3] and close[1] > close[2]
+
+// --- Dark Cloud Cover Condition ---
+isDarkCloudCover = dcc_uptrend and dcc_bullishCandle1 and dcc_bearishCandle2 and dcc_strongBody1 and dcc_strongBody2 and dcc_openAboveHigh1 and dcc_closeBelowMidpoint1
+
+// --- Plot Signal ---
+plotshape(isDarkCloudCover, title="Dark Cloud Cover", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Dark Cloud")
+
+// --- Highlight Background (Optional) ---
+bgcolor(isDarkCloudCover ? color.new(color.red, 85) : na)
+
+// --- Alert Condition ---
+alertcondition(isDarkCloudCover, title="Dark Cloud Cover Detected", message="Dark Cloud Cover Pattern Detected!")
+
+
+// --- Candle Details ---
+hm_body = math.abs(close - open)  // Real body size
+hm_upperWick = high - math.max(open, close)  // Upper wick size
+hm_lowerWick = math.min(open, close) - low  // Lower wick size
+hm_candleRange = high - low  // Total candle range
+
+// --- Hanging Man Conditions ---
+hm_smallBody = hm_body < (hm_candleRange * 0.3)  // Body is less than 30% of range
+hm_longLowerWick = hm_lowerWick > (2 * hm_body)  // Lower wick at least twice the body
+hm_smallUpperWick = hm_upperWick < (hm_body * 0.3)  // Upper wick smaller than 30% of body
+
+// --- Trend Check (Uptrend before pattern) ---
+hm_uptrend = close[1] > close[2] and close > close[1]
+
+// --- Final Hanging Man Condition ---
+isHangingMan = hm_uptrend and hm_smallBody and hm_longLowerWick and hm_smallUpperWick
+
+// --- Plot Signal ---
+plotshape(isHangingMan, title="Hanging Man", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Hanging Man")
+
+// --- Highlight Background (Optional) ---
+bgcolor(isHangingMan ? color.new(color.red, 85) : na)
+
+// --- Alert Condition ---
+alertcondition(isHangingMan, title="Hanging Man Detected", message="Hanging Man Pattern Detected!")
+
+
+// --- Doji Candle Details ---
+dojiOnly_body = math.abs(close - open)  // Real body size
+dojiOnly_candleRange = high - low  // Total candle range
+dojiOnly_isDoji = dojiOnly_body <= (dojiOnly_candleRange * 0.1)  // Body is less than 10% of range
+
+// --- Plot Doji ---
+plotshape(dojiOnly_isDoji, title="Doji", style=shape.circle, location=location.abovebar, color=color.yellow, size=size.small, text="Doji")
+
+// --- Highlight Background (Optional) ---
+bgcolor(dojiOnly_isDoji ? color.new(color.yellow, 85) : na)
+
+// --- Alert Condition ---
+alertcondition(dojiOnly_isDoji, title="Doji Detected", message="Doji Pattern Detected!")
+
+
+// --- Common Doji Conditions ---
+gd_body = math.abs(close - open)  // Real body size
+gd_range = high - low  // Total candle range
+
+// --- Gravestone Doji ---
+gd_isGravestoneDoji = gd_body <= (gd_range * 0.1) and (high - math.max(open, close)) > (gd_range * 0.6) and (math.min(open, close) - low) <= (gd_range * 0.1)
+
+// --- Dragonfly Doji ---
+gd_isDragonflyDoji = gd_body <= (gd_range * 0.1) and (math.min(open, close) - low) > (gd_range * 0.6) and (high - math.max(open, close)) <= (gd_range * 0.1)
+
+// --- Plot Signals ---
+plotshape(gd_isGravestoneDoji, title="Gravestone Doji", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Gravestone")
+plotshape(gd_isDragonflyDoji, title="Dragonfly Doji", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="Dragonfly")
+
+// --- Highlight Background (Optional) ---
+bgcolor(gd_isGravestoneDoji ? color.new(color.red, 85) : na)
+bgcolor(gd_isDragonflyDoji ? color.new(color.green, 85) : na)
+
+// --- Alert Conditions ---
+alertcondition(gd_isGravestoneDoji, title="Gravestone Doji Detected", message="Gravestone Doji Pattern Detected!")
+alertcondition(gd_isDragonflyDoji, title="Dragonfly Doji Detected", message="Dragonfly Doji Pattern Detected!")
+
+
+// --- Common Variables ---
+harami_body1 = math.abs(close[1] - open[1])  // First candle body size
+harami_body2 = math.abs(close - open)  // Second candle body size
+
+// --- Uptrend Harami (Bearish Reversal) ---
+harami_isUptrend = close[1] > close[2] and close > close[1]  // Check for uptrend
+harami_isFirstBullish = close[1] > open[1]  // First candle is bullish
+harami_isSecondBearish = close < open  // Second candle is bearish
+harami_secondInsideFirst = (open < close[1] and close > open[1]) or (close < close[1] and open > open[1])  // Second candle inside the first candle
+harami_bearishSmallerBody = harami_body2 < harami_body1  // Second body is smaller than the first
+
+isBearishHarami = harami_isUptrend and harami_isFirstBullish and harami_isSecondBearish and harami_secondInsideFirst and harami_bearishSmallerBody
+
+// --- Downtrend Harami (Bullish Reversal) ---
+harami_isDowntrend = close[1] < close[2] and close < close[1]  // Check for downtrend
+harami_isFirstBearish = close[1] < open[1]  // First candle is bearish
+harami_isSecondBullish = close > open  // Second candle is bullish
+harami_secondInsideFirstDown = (open > close[1] and close < open[1]) or (close > close[1] and open < open[1])  // Second candle inside the first candle
+harami_bullishSmallerBody = harami_body2 < harami_body1  // Second body is smaller than the first
+
+isBullishHarami = harami_isDowntrend and harami_isFirstBearish and harami_isSecondBullish and harami_secondInsideFirstDown and harami_bullishSmallerBody
+
+// --- Plot Signals ---
+plotshape(isBearishHarami, title="Bearish Harami", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Bearish Harami")
+plotshape(isBullishHarami, title="Bullish Harami", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="Bullish Harami")
+
+// --- Highlight Background (Optional) ---
+bgcolor(isBearishHarami ? color.new(color.red, 85) : na)
+bgcolor(isBullishHarami ? color.new(color.green, 85) : na)
+
+// --- Alert Conditions ---
+alertcondition(isBearishHarami, title="Bearish Harami Detected", message="Bearish Harami Pattern Detected!")
+alertcondition(isBullishHarami, title="Bullish Harami Detected", message="Bullish Harami Pattern Detected!")
+
+// --- Common Variables ---
+marubozu_body = math.abs(close - open)  // Candle body size
+marubozu_range = high - low  // Total candle range
+
+// Tolerance for shadows (small wicks allowed)
+marubozu_tolerance = marubozu_range * 0.05  // Wicks can be up to 5% of the range
+
+// --- Bullish Marubozu ---
+marubozu_isBullish = close > open  // Candle is bullish
+marubozu_noUpperWickBullish = (high - close) <= marubozu_tolerance  // No significant upper wick
+marubozu_noLowerWickBullish = (open - low) <= marubozu_tolerance  // No significant lower wick
+
+isBullishMarubozu = marubozu_isBullish and marubozu_noUpperWickBullish and marubozu_noLowerWickBullish and marubozu_body > (marubozu_range * 0.9)
+
+// --- Bearish Marubozu ---
+marubozu_isBearish = close < open  // Candle is bearish
+marubozu_noUpperWickBearish = (high - open) <= marubozu_tolerance  // No significant upper wick
+marubozu_noLowerWickBearish = (close - low) <= marubozu_tolerance  // No significant lower wick
+
+isBearishMarubozu = marubozu_isBearish and marubozu_noUpperWickBearish and marubozu_noLowerWickBearish and marubozu_body > (marubozu_range * 0.9)
+
+// --- Plot Signals ---
+plotshape(isBullishMarubozu, title="Bullish Marubozu", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="Bullish Marubozu")
+plotshape(isBearishMarubozu, title="Bearish Marubozu", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Bearish Marubozu")
+
+// --- Highlight Background (Optional) ---
+bgcolor(isBullishMarubozu ? color.new(color.green, 85) : na)
+bgcolor(isBearishMarubozu ? color.new(color.red, 85) : na)
+
+// --- Alert Conditions ---
+alertcondition(isBullishMarubozu, title="Bullish Marubozu Detected", message="Bullish Marubozu Pattern Detected!")
+alertcondition(isBearishMarubozu, title="Bearish Marubozu Detected", message="Bearish Marubozu Pattern Detected!")
+
+
+// --- Common Variables ---
+tweezer_high1 = high[1]  // High of first candle
+tweezer_high2 = high  // High of second candle
+
+tweezer_low1 = low[1]  // Low of first candle
+tweezer_low2 = low  // Low of second candle
+
+// --- Tweezer Top (Uptrend Reversal) ---
+tweezer_isUptrend = close[2] < close[1] and close[1] < close  // Uptrend confirmation
+tweezer_sameHigh = tweezer_high1 == tweezer_high2  // Same highs
+
+isTweezerTop = tweezer_isUptrend and tweezer_sameHigh
+
+// --- Tweezer Bottom (Downtrend Reversal) ---
+tweezer_isDowntrend = close[2] > close[1] and close[1] > close  // Downtrend confirmation
+tweezer_sameLow = tweezer_low1 == tweezer_low2  // Same lows
+
+isTweezerBottom = tweezer_isDowntrend and tweezer_sameLow
+
+// --- Plot Signals ---
+plotshape(isTweezerTop, title="Tweezer Top", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Tweezer Top")
+plotshape(isTweezerBottom, title="Tweezer Bottom", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="Tweezer Bottom")
+
+// --- Highlight Background (Optional) ---
+bgcolor(isTweezerTop ? color.new(color.red, 85) : na)
+bgcolor(isTweezerBottom ? color.new(color.green, 85) : na)
+
+// --- Alert Conditions ---
+alertcondition(isTweezerTop, title="Tweezer Top Detected", message="Tweezer Top Pattern Detected!")
+alertcondition(isTweezerBottom, title="Tweezer Bottom Detected", message="Tweezer Bottom Pattern Detected!")
