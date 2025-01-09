@@ -24,8 +24,8 @@ plotshape(isTopHammer, title="Top Hammer", style=shape.triangledown, location=lo
 plotshape(isBottomHammer, title="Bottom Hammer", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text = "Bull Hammer")
 
 // Highlight Candle Background
-bgcolor(isTopHammer ? color.new(color.red, 85) : na)
-bgcolor(isBottomHammer ? color.new(color.green, 85) : na)
+//bgcolor(isTopHammer ? color.new(color.red, 85) : na)
+//bgcolor(isBottomHammer ? color.new(color.green, 85) : na)
 
 // Alert Conditions
 alertcondition(isTopHammer, title="Top Hammer Detected", message="Top Hammer Candle Detected!")
@@ -52,8 +52,8 @@ plotshape(bullishEngulfing, title="Bullish Engulfing", style=shape.triangleup, l
 plotshape(bearishEngulfing, title="Bearish Engulfing", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Bear Engulf")
 
 // --- Background Highlights (Optional) ---
-bgcolor(bullishEngulfing ? color.new(color.green, 85) : na)
-bgcolor(bearishEngulfing ? color.new(color.red, 85) : na)
+//bgcolor(bullishEngulfing ? color.new(color.green, 85) : na)
+//bgcolor(bearishEngulfing ? color.new(color.red, 85) : na)
 
 // --- Alerts ---
 alertcondition(bullishEngulfing, title="Bullish Engulfing Alert", message="Bullish Engulfing Pattern Detected!")
@@ -74,7 +74,7 @@ isMorningStar = downtrend and candle1_bearish and candle2_small and candle3_bull
 plotshape(isMorningStar, title="Morning Star", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="Morning Star")
 
 // --- Background Highlight (Optional) ---
-bgcolor(isMorningStar ? color.new(color.green, 85) : na)
+//bgcolor(isMorningStar ? color.new(color.green, 85) : na)
 
 // --- Alert Condition ---
 alertcondition(isMorningStar, title="Morning Star Detected", message="Morning Star Pattern Detected!")
@@ -96,7 +96,7 @@ isEveningStar = uptrend and candle1_bullish and candle2_small_evening and candle
 plotshape(isEveningStar, title="Evening Star", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Evening Star")
 
 // --- Background Highlight (Optional) ---
-bgcolor(isEveningStar ? color.new(color.red, 85) : na)
+//bgcolor(isEveningStar ? color.new(color.red, 85) : na)
 
 // --- Alert Condition ---
 alertcondition(isEveningStar, title="Evening Star Detected", message="Evening Star Pattern Detected!")
@@ -132,7 +132,7 @@ isThreeWhiteSoldiers = downtrend_tws and bullish1 and bullish2 and bullish3 and 
 plotshape(isThreeWhiteSoldiers, title="Three White Soldiers", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="3 Soldiers")
 
 // --- Highlight Background (Optional) ---
-bgcolor(isThreeWhiteSoldiers ? color.new(color.green, 85) : na)
+//bgcolor(isThreeWhiteSoldiers ? color.new(color.green, 85) : na)
 
 // --- Alert Condition ---
 alertcondition(isThreeWhiteSoldiers, title="Three White Soldiers Detected", message="Three White Soldiers Pattern Detected!")
@@ -167,7 +167,7 @@ isThreeBlackCrows = tbc_uptrend and tbc_bearish1 and tbc_bearish2 and tbc_bearis
 plotshape(isThreeBlackCrows, title="Three Black Crows", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="3 Crows")
 
 // --- Highlight Background (Optional) ---
-bgcolor(isThreeBlackCrows ? color.new(color.red, 85) : na)
+//bgcolor(isThreeBlackCrows ? color.new(color.red, 85) : na)
 
 // --- Alert Condition ---
 alertcondition(isThreeBlackCrows, title="Three Black Crows Detected", message="Three Black Crows Pattern Detected!")
@@ -193,7 +193,7 @@ isDarkCloudCover = dcc_uptrend and dcc_bullishCandle1 and dcc_bearishCandle2 and
 plotshape(isDarkCloudCover, title="Dark Cloud Cover", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Dark Cloud")
 
 // --- Highlight Background (Optional) ---
-bgcolor(isDarkCloudCover ? color.new(color.red, 85) : na)
+//bgcolor(isDarkCloudCover ? color.new(color.red, 85) : na)
 
 // --- Alert Condition ---
 alertcondition(isDarkCloudCover, title="Dark Cloud Cover Detected", message="Dark Cloud Cover Pattern Detected!")
@@ -220,7 +220,7 @@ isHangingMan = hm_uptrend and hm_smallBody and hm_longLowerWick and hm_smallUppe
 plotshape(isHangingMan, title="Hanging Man", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Hanging Man")
 
 // --- Highlight Background (Optional) ---
-bgcolor(isHangingMan ? color.new(color.red, 85) : na)
+//bgcolor(isHangingMan ? color.new(color.red, 85) : na)
 
 // --- Alert Condition ---
 alertcondition(isHangingMan, title="Hanging Man Detected", message="Hanging Man Pattern Detected!")
@@ -232,10 +232,10 @@ dojiOnly_candleRange = high - low  // Total candle range
 dojiOnly_isDoji = dojiOnly_body <= (dojiOnly_candleRange * 0.1)  // Body is less than 10% of range
 
 // --- Plot Doji ---
-plotshape(dojiOnly_isDoji, title="Doji", style=shape.circle, location=location.abovebar, color=color.yellow, size=size.small, text="Doji")
+plotshape(dojiOnly_isDoji, title="Doji", style=shape.cross, location=location.abovebar, color=color.blue, size=size.small, text="Doji")
 
 // --- Highlight Background (Optional) ---
-bgcolor(dojiOnly_isDoji ? color.new(color.yellow, 85) : na)
+//bgcolor(dojiOnly_isDoji ? color.new(color.yellow, 85) : na)
 
 // --- Alert Condition ---
 alertcondition(dojiOnly_isDoji, title="Doji Detected", message="Doji Pattern Detected!")
@@ -256,8 +256,8 @@ plotshape(gd_isGravestoneDoji, title="Gravestone Doji", style=shape.triangledown
 plotshape(gd_isDragonflyDoji, title="Dragonfly Doji", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="Dragonfly")
 
 // --- Highlight Background (Optional) ---
-bgcolor(gd_isGravestoneDoji ? color.new(color.red, 85) : na)
-bgcolor(gd_isDragonflyDoji ? color.new(color.green, 85) : na)
+//bgcolor(gd_isGravestoneDoji ? color.new(color.red, 85) : na)
+//bgcolor(gd_isDragonflyDoji ? color.new(color.green, 85) : na)
 
 // --- Alert Conditions ---
 alertcondition(gd_isGravestoneDoji, title="Gravestone Doji Detected", message="Gravestone Doji Pattern Detected!")
@@ -291,8 +291,8 @@ plotshape(isBearishHarami, title="Bearish Harami", style=shape.triangledown, loc
 plotshape(isBullishHarami, title="Bullish Harami", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="Bullish Harami")
 
 // --- Highlight Background (Optional) ---
-bgcolor(isBearishHarami ? color.new(color.red, 85) : na)
-bgcolor(isBullishHarami ? color.new(color.green, 85) : na)
+//bgcolor(isBearishHarami ? color.new(color.red, 85) : na)
+//bgcolor(isBullishHarami ? color.new(color.green, 85) : na)
 
 // --- Alert Conditions ---
 alertcondition(isBearishHarami, title="Bearish Harami Detected", message="Bearish Harami Pattern Detected!")
@@ -324,8 +324,8 @@ plotshape(isBullishMarubozu, title="Bullish Marubozu", style=shape.triangleup, l
 plotshape(isBearishMarubozu, title="Bearish Marubozu", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="Bearish Marubozu")
 
 // --- Highlight Background (Optional) ---
-bgcolor(isBullishMarubozu ? color.new(color.green, 85) : na)
-bgcolor(isBearishMarubozu ? color.new(color.red, 85) : na)
+//bgcolor(isBullishMarubozu ? color.new(color.green, 85) : na)
+//bgcolor(isBearishMarubozu ? color.new(color.red, 85) : na)
 
 // --- Alert Conditions ---
 alertcondition(isBullishMarubozu, title="Bullish Marubozu Detected", message="Bullish Marubozu Pattern Detected!")
@@ -356,9 +356,67 @@ plotshape(isTweezerTop, title="Tweezer Top", style=shape.triangledown, location=
 plotshape(isTweezerBottom, title="Tweezer Bottom", style=shape.triangleup, location=location.belowbar, color=color.green, size=size.small, text="Tweezer Bottom")
 
 // --- Highlight Background (Optional) ---
-bgcolor(isTweezerTop ? color.new(color.red, 85) : na)
-bgcolor(isTweezerBottom ? color.new(color.green, 85) : na)
+//bgcolor(isTweezerTop ? color.new(color.red, 85) : na)
+//bgcolor(isTweezerBottom ? color.new(color.green, 85) : na)
 
 // --- Alert Conditions ---
 alertcondition(isTweezerTop, title="Tweezer Top Detected", message="Tweezer Top Pattern Detected!")
 alertcondition(isTweezerBottom, title="Tweezer Bottom Detected", message="Tweezer Bottom Pattern Detected!")
+
+
+
+// === INPUTS ===
+lookback = input.int(20, title="Lookback Period for Highs and Lows", tooltip="Number of candles to consider for swing highs and lows")
+zone_width = input.float(0.005, title="Zone Width (%)", tooltip="Percentage width of the support/resistance zones")
+show_labels = input.bool(true, title="Show Zone Labels", tooltip="Enable/Disable zone labels")
+zone_transparency = input.int(80, title="Zone Transparency (0-100)", minval=0, maxval=100, tooltip="Transparency of the zone background")
+
+// === DETECT SWING HIGHS AND LOWS ===
+// Swing High: Current high is greater than highs of adjacent candles
+isSwingHigh = ta.highest(high, lookback) == high
+
+// Swing Low: Current low is less than lows of adjacent candles
+isSwingLow = ta.lowest(low, lookback) == low
+
+// Store Swing Highs and Lows
+swingHighs = ta.valuewhen(isSwingHigh, high, 0)
+swingLows = ta.valuewhen(isSwingLow, low, 0)
+
+// === CALCULATE ZONES ===
+// Resistance Zone
+resistance = ta.valuewhen(isSwingHigh, high, 0)
+resistance_upper = resistance * (1 + zone_width)
+resistance_lower = resistance * (1 - zone_width)
+
+// Support Zone
+support = ta.valuewhen(isSwingLow, low, 0)
+support_upper = support * (1 + zone_width)
+support_lower = support * (1 - zone_width)
+
+// === PLOT ZONES ===
+// Resistance Zone
+fill(plot(resistance_upper, color=color.new(color.red, 0), linewidth=2, title="Resistance Upper"),
+     plot(resistance_lower, color=color.new(color.red, 0), linewidth=2, title="Resistance Lower"),
+     color=color.new(color.red, zone_transparency), title="Resistance Zone")
+
+// Support Zone
+fill(plot(support_upper, color=color.new(color.green, 0), linewidth=2, title="Support Upper"),
+     plot(support_lower, color=color.new(color.green, 0), linewidth=2, title="Support Lower"),
+     color=color.new(color.green, zone_transparency), title="Support Zone")
+
+// === ADD LABELS ===
+if show_labels
+    if isSwingHigh
+        label.new(bar_index, resistance, text="R", style=label.style_label_down, color=color.red, textcolor=color.white, size=size.small)
+    if isSwingLow
+        label.new(bar_index, support, text="S", style=label.style_label_up, color=color.green, textcolor=color.white, size=size.small)
+
+// === BACKGROUND HIGHLIGHTS ===
+//bgcolor((close > support_lower and close < support_upper) ? color.new(color.green, zone_transparency + 10) : na)
+//bgcolor((close > resistance_lower and close < resistance_upper) ? color.new(color.red, zone_transparency + 10) : na)
+
+// === ALERTS ===
+alertcondition(close > resistance_lower and close < resistance_upper, title="Near Resistance Zone", message="Price is near the resistance zone!")
+alertcondition(close > support_lower and close < support_upper, title="Near Support Zone", message="Price is near the support zone!")
+
+
